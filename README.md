@@ -11,16 +11,22 @@ How to use this?
 4. Start using the Api
 4. Since the login requires manual login to Kite you need deal with it in UI.. See the Forms vb.net sample below.
 
-Upcoming
-Will be adding WebSocket streaming to this soon in a week or two
+[Upcoming]
+1.Will be adding WebSocket streaming to this soon in a week or two
+2.Adding documentation
 
 [Release notes]
 [Date: 28/Sep/2016  Update: Intial relase]
-In this release it is just a 
+In this release it is just concentrating on basic APIs
 
 
 [Sample login part]
+
 The below code should be ibn you application global part or module/class that can be access across app
+=======
+
+' The bkow code should be ibn you application global part or module/class that can be access across app
+
 Public kapi As KiteApi.KiteApi
 
 'Main form
@@ -62,6 +68,8 @@ End Class
 
 
 'Browser Form
+=======
+
     'Below is code of the browser form to capture request_token
     
     Public Class BrowserFrom
