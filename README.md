@@ -9,66 +9,61 @@ How to use this?
 2. Reference the  KiteApi.dll from above downloaded files
 3. Ensure Newtonsoft.Json.dll and RestSharp.dll are in same folder as KiteApi.dll
 4. Start using the Api
-4. Since the login requires manual login to Kite you need deal with it in UI.. See the Forms vb.net sample below.
+5. Since the login requires manual login to Kite you need deal with it in UI.. See the Forms vb.net sample below.
 
-[Upcoming]
-1.Will be adding WebSocket streaming to this soon in a week or two
-2.Adding documentation
+* [Upcoming changes]
+  * Will be adding WebSocket streaming to this soon in a week or two
+  * Adding documentation
 
-[Release notes]
-[Date: 28/Sep/2016  Update: Intial relase]
-In this release it is just concentrating on basic APIs
+* [Release notes]
+  * [Date: 28/Sep/2016  Update: Intial relase]
+    * In this release it is just concentrating on basic APIs
 
 
 [Sample login part]
 
 The below code should be ibn you application global part or module/class that can be access across app
 =======
-
-' The bkow code should be ibn you application global part or module/class that can be access across app
+'
+' The below code should be in you application global part or module/class that can be access across app
 
 Public kapi As KiteApi.KiteApi
 
 'Main form
-Public Class Main
 
 
-    Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
-
-        ConnectAndLogin()
-
-    End Sub
+    Public Class Main
+        Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
+            ConnectAndLogin()
+        End Sub
     
-    Private Sub ConnectAndLogin()
+        Private Sub ConnectAndLogin()
 
+            Dim url As String
 
-        Dim url As String
+            url = "https://kite.trade/connect/login?api_key=xxxx"
 
-        url = "https://kite.trade/connect/login?api_key=xxxx"
+            BrowserFrom.Show()
+            BrowserFrom.Hide()
 
-        BrowserFrom.Show()
-        BrowserFrom.Hide()
+            BrowserFrom.wb.ScriptErrorsSuppressed = True
+            BrowserFrom.wb.Navigate(New Uri(url))
+            BrowserFrom.ShowDialog()
+            kapi.GetAccessToken()
+            if you got up to this then login is successful
 
-        BrowserFrom.wb.ScriptErrorsSuppressed = True
-        BrowserFrom.wb.Navigate(New Uri(url))
-        BrowserFrom.ShowDialog()
-        kapi.GetAccessToken()
-        if you got up to this then login is successful
-        
-        Dim AuthTokens As String
-        'Store your tokens for use later in app, you need to login only once in a day to kite api to get these
-        
-        AuthTokens = "{""logindate"":""" & (Format(Now(), "dd/MMM/yyyy")) & """,""apikey"":""" & kapi.ApiKey & """, ""apisecret"":""" & kapi.ApiSecret & """, ""zuserid"":""" & kapi.zUserID & """, ""access_token"":""" & kapi.AccessToken & """ , ""public_token"":""" & kapi.PublicToken & """}"
+            Dim AuthTokens As String
+            'Store your tokens for use later in app, you need to login only once in a day to kite api to get these
 
-        
-        
-        'In the brwoser form you need capture the request_token in redirect after login
-    End Sub
-End Class
+            AuthTokens = "{""logindate"":""" & (Format(Now(), "dd/MMM/yyyy")) & """,""apikey"":""" & kapi.ApiKey & """, ""apisecret"":""" & kapi.ApiSecret & """, ""zuserid"":""" & kapi.zUserID & """, ""access_token"":""" & kapi.AccessToken & """ , ""public_token"":""" & kapi.PublicToken & """}"
+
+            'In the brwoser form you need capture the request_token in redirect after login
+        End Sub
+    End Class
 
 
 'Browser Form
-=======
+
 
     'Below is code of the browser form to capture request_token
     
