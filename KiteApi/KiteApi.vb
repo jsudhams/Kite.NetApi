@@ -60,7 +60,7 @@ Public Class KiteApi
 
     End Function
 
-    Public Function Order_Modify(Order_Veriety As String,
+    Public Function Order_Modify_DONOTUSEYET(Order_Veriety As String,
                                 exchange As String,
                                 tradingsymbol As String,
                                 transaction_type As String,
@@ -96,6 +96,15 @@ Public Class KiteApi
 
     End Function
 
+
+    ''' <summary>
+    ''' Cancels a particular order
+    ''' </summary>
+    ''' <param name="order_veriety">Specify the order variety like regular/amo/bo/co</param>
+    ''' <param name="orderid">Order Id to cancel</param>
+    ''' <param name="parent_orderid">For CO orders provide the order id first leg order</param>
+    ''' <returns>JSON with status and Order ID if successful</returns>
+
     Public Function Order_Cancel(order_veriety As String, orderid As String, Optional parent_orderid As String = "") As String
 
 
@@ -120,6 +129,11 @@ Public Class KiteApi
 
     End Function
 
+
+    ''' <summary>
+    ''' Gets all the orders for the day
+    ''' </summary>
+    ''' <returns>JSON String list of orders with status</returns>
     Public Function Order_GetList() As String
 
 
@@ -138,10 +152,63 @@ Public Class KiteApi
 
     End Function
 
+    Public Function Order_GetSingleOrderDetails(orderid As String) As String
+
+
+        'GET the orders list in the following format 
+        '"https://api.kite.trade/orders/151220000000000?api_key=xxx&access_token=yyy"
+
+        Dim params As New Dictionary(Of String, Object)
+
+        Dim route As String
+
+        route = "/orders/" & orderid
+
+        Return ExecOnKiteAPI(route, _ApiKey, _AccessToken, Method.GET, params)
 
 
 
+    End Function
 
+    ''' <summary>
+    ''' Get positions of intraday, future and options, gets both day and net
+    ''' </summary>
+    ''' <returns>JSON String list of Positions with status</returns>
+    Public Function Position_GetList() As String
+
+
+        'GET the orders list in the following format 
+        'https://api.kite.trade/portfolio/positions/?api_key=xxx&access_token=yyy
+
+        Dim params As New Dictionary(Of String, Object)
+
+        Dim route As String
+
+        route = "/portfolio/positions"
+
+        Return ExecOnKiteAPI(route, _ApiKey, _AccessToken, Method.GET, params)
+
+
+
+    End Function
+
+    Public Function Holding_GetList() As String
+
+
+        'GET the orders list in the following format 
+        '"https://api.kite.trade/portfolio/holdings/?api_key=xxx&access_token=yyy"
+
+        Dim params As New Dictionary(Of String, Object)
+
+        Dim route As String
+
+        route = "/portfolio/holdings"
+
+        Return ExecOnKiteAPI(route, _ApiKey, _AccessToken, Method.GET, params)
+
+
+
+    End Function
     Public Function Quote_GetSingle(exchange As String, tradingSymbol As String) As String
 
         'Post the following format 
@@ -339,5 +406,30 @@ Public Class KiteApi
             Return _ex
         End Get
     End Property
+
+    Private websocket As WebSocket4Net.WebSocket
+
+
+
+    Public Function socketOpened(s As Object, e As EventArgs) As Integer
+        websocket.Send("{ ""a"": ""subscribe"", ""v"": [408065]}")
+        websocket.Send("{ ""a"": ""mode"", ""v"": [""ltp"",[408065]]}")
+        Return 0
+    End Function
+
+    Private Function socketClosed(s As Object, e As EventArgs) As Integer
+        websocket.Send("{ ""a"": ""unsubscribe"", ""v"": [408065]}")
+        Return 0
+    End Function
+
+    Public Function socketError(s As Object, e As SuperSocket.ClientEngine.ErrorEventArgs) As Integer
+        Return 0
+    End Function
+
+    Public Function socketMessage(s As Object, e As WebSocket4Net.MessageReceivedEventArgs) As Integer
+        Return 0
+    End Function
+
+
 
 End Class
